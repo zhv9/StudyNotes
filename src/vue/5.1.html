@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue</title>
+    <style type="text/css">
+        [v-clock] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!--如果使用id为app的那么就这个id的vue控制-->
+        <div id="clock_app" v-clock>
+            {{message}}
+        </div>
+        <div id="if_app">
+            <template v-if="status === 1">
+                <p>这段文本</p>
+                <p>这段文本</p>
+                <p>这段文本</p>
+            </template>
+        </div>
+        <div id="click_app">
+            <template v-if="type==='name'">
+                <label>用户名：</label>
+                <input type="text" placeholder="输入用户名" key="name-input">
+            </template>
+            <template v-else>
+                <label>邮箱：</label>
+                <input type="text" placeholder="输入邮箱" key="mail-input">
+                <!--添加key以后这个文本框就会跟着变化-->
+            </template>
+            <button @click="handleToggleClick">切换输入类型</button>
+        </div>
+        <p id="show_app" v-show="status===1">当status为1时显示该行</p>
+        <div id="for_app">
+            <ul>
+                <li v-for="(book, index, author) in books">{{index}} - {{book.author}} - {{book.name}}</li>
+            </ul>
+        </div>
+        <div id="for_object_app">
+            <span v-for="value of user">{{value}} </span>
+        </div>
+        <div id="filter_app">
+            <button @click="handleBookFilter">选择javascript的书</button>
+        </div>
+    </div>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <script>
+        var clock_app = new Vue({
+            el: '#clock_app',
+            data: {
+                message: '使用v-clock在vue实例编译结束时从绑定的html元素上移出'
+            }
+        });
+
+        var if_app = new Vue({
+            el: '#if_app',
+            data: {
+                status: 1
+            }
+        });
+
+        var click_app = new Vue({
+            el: '#click_app',
+            data: {
+                type: 'name'
+            },
+            methods: {
+                handleToggleClick: function () {
+                    this.type = (this.type === 'name') ? 'mail' : 'name';
+                }
+            }
+        });
+
+        var show = new Vue({
+            el: '#show_app',  //如果这里用app的话，会因为在这里找不到app后面v-for中定义的books而引起错误，所以这里使用show_app的id
+            data: {
+                status: 2
+            }
+        });
+
+        var for_app = new Vue({
+            el: '#for_app',
+            data: {
+                books: [
+                    {
+                        name: 'vue',
+                        author: 'cat'
+                    },
+                    {
+                        name: 'master javascript',
+                        author: 'dog'
+                    },
+                    {
+                        name: 'javascript cook book',
+                        author: 'pig'
+                    }
+                ]
+            }
+        });
+
+        var for_object_app = new Vue({
+            el: '#for_object_app',
+            data: {
+                user: {
+                    name: 'cat',
+                    gender: 'male',
+                    age: 3
+                }
+            }
+        });
+
+        var filter_app = new Vue({
+            el: '#filter_app',
+            methods: {
+                handleBookFilter: function () {
+                    for_app.books = for_app.books.filter(function (item) {
+                        return item.name.match(/javascript/);
+                    })
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
